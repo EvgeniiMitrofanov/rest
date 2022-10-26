@@ -208,10 +208,8 @@ if (document.getElementById('v-pills-admin')) {
     //Fill the "All users" table of admin tab
     sendRequestInfo('GET', '/admin').then(users => renderAllUsersTableContent(users));
 
-    //Создайте нового пользователя, сохраните его в БД и добавьте строку в таблицу "All Users" после нажатия кнопки "Add new user" на вкладке "New user"
     document.getElementById('createUserForm').addEventListener('submit', (event) => {
         event.preventDefault();
-        //Собрать информацию о новом пользователе в объект
         const newUserRoles = [];
         if (document.getElementById('newRoleUser').selected) newUserRoles.push({id: 2, authority: 'ROLE_USER'});
         if (document.getElementById('newRoleAdmin').selected) newUserRoles.push({id: 1, authority: 'ROLE_ADMIN'});
@@ -223,7 +221,6 @@ if (document.getElementById('v-pills-admin')) {
             password: document.getElementById('newUserPassword').value,
             roles: newUserRoles
         };
-        //Очистить значения из формы
         document.getElementById('newUserFirstName').value = '';
         document.getElementById('newUserLastName').value = '';
         document.getElementById('newUserAge').value = '';
@@ -234,18 +231,14 @@ if (document.getElementById('v-pills-admin')) {
         sendRequestInfo('POST', '/admin', newUser).then(user => {
             if (user.id) tableAddRowContent(user)
         });
-        //Переключится на вкладку все пользователи
         bootstrap.Tab.getInstance(document.querySelector('#nav-tab a[href="#nav-usersTable"]')).show();
     });
 
-    //показать модольное окно редактирования пользователя
     document.getElementById('editModal').addEventListener('show.bs.modal', (event) => {
         const userId = event.relatedTarget.getAttribute('data-bs-userId');
-        // Заполнить форму модального окна данными
         sendRequestInfo('GET', '/admin/' + userId).then(user => renderEditModalFormContent(user));
     });
 
-    //Обновите пользователя в БД и обновите соответствующую строку таблицы после нажатия кнопки Редактировать в модольном режиме редактирования
     document.getElementById('editForm').addEventListener('submit', (event) => {
         event.preventDefault();
         const userRolesEdited = [];
@@ -266,14 +259,11 @@ if (document.getElementById('v-pills-admin')) {
         document.getElementById('buttonCloseModal').click();
     });
 
-    //показать модальное окно Удаления пользователя
     document.getElementById('deleteModal').addEventListener('show.bs.modal', (event) => {
         const userId = event.relatedTarget.getAttribute('data-bs-userId');
-        // Заполнение содержимого данными пользавателя
         sendRequestInfo('GET', '/admin/' + userId).then(user => renderDeleteModalContent(user));
     });
 
-    //Удалить пользователя из БД и удалить соответсвующую строку из таблицы после нажатия кнопки Удалить
     document.getElementById('deleteForm').addEventListener('submit', (event) => {
         event.preventDefault();
         sendRequestInfo('DELETE', '/admin/' + document.getElementById('deleteUserId').value).then(id => allUsersTableRowDelete(id));
