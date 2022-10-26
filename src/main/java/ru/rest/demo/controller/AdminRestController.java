@@ -28,41 +28,41 @@ public class AdminRestController {
     public ResponseEntity<List<User>> getInfoUsersList() {
         List<User> userList = userService.getAllUsers();
         if (userList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); //204
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(userList, HttpStatus.OK); // 200
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping("api/admin/{id}")
     public ResponseEntity<User> getUserById(@PathVariable long id) {
         User user = userService.getUserById(id);
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK); // 200
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("api/admin")
-    public ResponseEntity<User>  getSaveUserForm(@RequestBody User user) {
+    public ResponseEntity<User>  saveUserForm(@RequestBody User user) {
         if (userService.addUser(user)) {
-            return new ResponseEntity<>(user, HttpStatus.CREATED); // 201
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(user, HttpStatus.CONFLICT); // 400
+        return new ResponseEntity<>(user, HttpStatus.CONFLICT);
     }
 
     @PutMapping("api/admin")
-    public ResponseEntity<User> getUpdateUserForm(@RequestBody User user) {
+    public ResponseEntity<User> updateUserForm(@RequestBody User user) {
         if (userService.updateUser(user)) {
-            return new ResponseEntity<>(user, HttpStatus.OK); // 200
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.CONFLICT); // 400
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @DeleteMapping("api/admin/{id}")
-    public ResponseEntity<Long>  getRemoveUserForm(@PathVariable long id) {
+    public ResponseEntity<Long>  removeUserForm(@PathVariable long id) {
         if (userService.deleteUserById(id)) {
-            return new ResponseEntity<>(id, HttpStatus.OK); // 200
+            return new ResponseEntity<>(id, HttpStatus.OK);
         }
-        return new ResponseEntity<>(id, HttpStatus.NOT_FOUND); // 404
+        return new ResponseEntity<>(id, HttpStatus.NOT_FOUND);
     }
 }
